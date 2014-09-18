@@ -1,0 +1,99 @@
+---
+title: "Readme.Rmd"
+output: html_document
+---
+
+Raw data of the datasets contains two data sets containing 3-axial linear acceleration and 3-axial angular velocity data-samples:
+- Test
+- Train
+
+For each of the data-sets the following is present in separate files:
+- Subject information - the subject carrying out the experiment
+  - An identifier of the subject who carried out the experiment.
+- X information - each row describing the experiment
+  - Triaxial acceleration from the accelerometer (total acceleration) and the estimated body acceleration. 
+  - Triaxial Angular velocity from the gyroscope. 
+  - A 561-feature vector with time and frequency domain variables. 
+- Y information - the activity performed
+  - Its activity label. 
+
+For the test or train data-set all three files have the same number of rows, therefore data from the three different files can be matched easily. However, in terms of data-tidiness there is a lot to say about the quality, as the following violations are present:
+-Multiple tables (files) are used describing the same kind of measurements
+-Measurements that really belong together are distributed over different files (X, Y, subject)
+-Labels are not present in the data-sets, but in a separate file.
+-Activities are not descriptive in the data-sets (written as numbers that are not easy to interpret). The labels appear in a separate file.
+
+Furthermore for this project, out of the dataset only the mean and standard deviations are relevant and need to be calculated into averages. All other columns are irrelevant.
+
+This codebook describes the transformations that took place in 5 steps:
+
+## Step 1 - Merges the training and the test sets to create one data set.
+
+- For the train data-set all three files are read in to memory:
+  - Subject information (numeric)
+  - Experiment (X) information (numeric)
+  - Activity (Y) information (numeric)
+- For the test data-set all three files are read in to memory
+  - Subject information (numeric)
+  - Experiment (X) information (numeric) 
+  - Activity (Y) information (numeric)
+- The Subject information for the Train and Test data sets are concatenated
+- The Experiment (X) information for the Train and Test data sets are concatenated
+- The Subject (Y) information for the Train and Test data sets are concatenated
+
+## Step 2 - Extract only the measurements on the mean and standard deviation for each measurement
+
+- A list is captured of the labels for each of the measurements of the experiment. This list is present in a file names features.txt. A sample of this list is as follows, and is indicated by an identifier and a name: 
+    1 tBodyAcc-mean()-X
+    2 tBodyAcc-mean()-Y
+    3 tBodyAcc-mean()-Z
+    4 tBodyAcc-meanFreq()-X
+    5 tBodyAcc-std()-X
+    6 tBodyAcc-std()-Y 
+    7 fBodyAccMag-max()
+    8 fBodyAccMag-min() 
+    9 fBodyAccMag-sma()
+
+Out of this list, only the columns that describe values indicating "mean" or "standard" columns are preserved. The others are dropped. To take the above sample, this is what results:
+    tBodyAcc-mean()-X
+    tBodyAcc-mean()-Y
+    tBodyAcc-mean()-Z
+    tBodyAcc-meanFreq()-Z
+    tBodyAcc-std()-X
+    tBodyAcc-std()-Y 
+
+The resulting sublist will be used later to add as labels to the Experiment (X) dataset.
+
+## Step 3 - Use descriptive activity names to name the activities in the data set
+
+The data containing activities looks as follows:  
+    5
+    5
+    4
+    4
+
+This is not very descriptive. A file named activity_labels.txt contains the mapping of each of the identifiers to a textual, thus more readable description. The above list is therefore changed like such:
+    STANDING
+    STANDING
+    SITTING
+    SITTING
+
+## Step 4 -  Appropriately label the data set with descriptive variable names
+
+The Subject data set does not contain a label for its (single) column. A fixed label "subject" is added.
+The Experiment (X) data set does not contain labels. From the sublist gathered in step two the correct labels are found and added as column labels to the dataset.
+The Activity (Y) data set does not contain a label for its (single) column. A fixed label "activity" is added.
+
+## Step 5 - Create a second, independent tidy data set with the average of each variable for each activity and each subject
+
+The Subject, Experiment (X), and Activity (Y) data are merged together by taking a row for each of the tables and adding the three horizontally together as columns.An example for the data for a row is as follows:
+
+Subject       : 1
+Experiment (X): 2.8602671e-001 -1.3163359e-002 -1.1908252e-001 -9.7541469e-001 -9.6745790e-001 -9.4495817e-001 -9.8679880e-001 ...
+Activity   (Y): SITTING
+
+For the experiment data the means are calculated. 
+
+After transformation and means calculation a row will look like this:
+"subject","activity","tBodyAcc-mean()-X","tBodyAcc-mean()-Y","tBodyAcc-mean()-Z","tBodyAcc-std()-X","tBodyAcc-std()-Y","tBodyAcc-std()-Z"
+1,"LAYING", 2.8602671e-001 -1.3163359e-002 -1.1908252e-001 -9.7541469e-001 -9.6745790e-001
