@@ -69,11 +69,11 @@ y_data[,1] <- activities[y_data[, 1], 2]
 # Add column names to the data set for all the mean and standard columns
 names(x_data) <- features[mean_std_features, 2]
 
-# Add column name for the activity data
-names(y_data) <- "activity"
+# Add friendly column name for the activity data
+names(y_data) <- "Activity"
 
-# Add column name for the subject data
-names(subject_data) <- "subject"
+# Add friendly column name for the subject data
+names(subject_data) <- "Subject"
 
 ##########
 ## Step 5 - Create a second, independent tidy data set with the average of each variable for each activity and each subject
@@ -82,8 +82,8 @@ names(subject_data) <- "subject"
 # Merge all the data in a single data set by using cbind to glue everything together as new columns
 combined <- cbind(x_data, y_data, subject_data)
 
-# Calculate means for all columns except for the last two two (activity & subject). 
-tidy <- ddply(combined, .(subject, activity), function(x) colMeans(x[, 1:length(mean_std_features)]))
+# Calculate means for all columns except for the last two (Activity & Subject). 
+tidy <- ddply(combined, .(Subject, Activity), function(x) colMeans(x[, 1:length(mean_std_features)]))
 
 # Last, write the tidy.txt file, separate columns with a comma, containing the clean data set
 write.table(tidy, "tidy.txt", sep=",", row.names=FALSE)
