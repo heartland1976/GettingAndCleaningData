@@ -13,7 +13,7 @@
 ##########
 
 # Set the working directory - as we're lazy
-setwd("~/Documents/Coursera/datascience/[3] Cleaning Data/Course Project/UCI HAR Dataset")
+setwd("./UCI HAR Dataset")
 
 # We're using the funky plyr library for doing our aggregations
 library(plyr)
@@ -86,7 +86,7 @@ combined <- cbind(x_data, y_data, subject_data)
 tidy <- ddply(combined, .(Subject, Activity), function(x) colMeans(x[, 1:length(mean_std_features)]))
 
 # Last, write the tidy.txt file, separate columns with a comma, containing the clean data set
-write.table(tidy, "tidy.txt", sep=",", row.names=FALSE)
+write.table(tidy, "../tidy.txt", sep=",", row.names=FALSE)
 
 # Return to upper directory
 setwd("..")
